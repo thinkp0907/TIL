@@ -13,3 +13,42 @@
 >
 > - <div> 로 division을 만들어 box형식으로 table을 생성하였다.
 > - talbe의 컬럼명을 명시하고 그 아래 <tbody>를 이용해 각 컬럼에 입력할 값을 지정하는 것을 볼 수 있다.
+
+
+
+- {% %} script에서도 사용 가능.
+
+- ajax 통신에서는 render(), redirect()를 사용하면 안된다.
+
+- 현재 templates에서 데이터만 바꾸는 거라 render와 redirect 사용 x. 대신 HttpResponse()
+
+```html
+<script>
+
+	$(document).ready(function() {
+      $('#newBtn').click(function() {
+         location.href = '../bbs_registerForm' ;
+      })
+      $('#searchBtn').click(function() {
+      	$('#tbody').empty()
+      	// ajax 통신 - json
+      		$.ajax({
+      			url : "{% url 'bbs_search' %}",
+      			type : "post" ,
+      			data : {'csrfmiddlewaretoken' : '{{csrf_token   }}' },
+      			dataType : "json",
+      			success : function(data) {
+      				alert(data)
+      			}
+      		})
+      })
+	})
+</script>
+```
+
+```python
+def bbs_search(request):
+    dict = {'test' : 'json_sample'}
+    return HttpResponse(dict, content_type='application/json')
+```
+
